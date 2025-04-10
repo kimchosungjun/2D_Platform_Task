@@ -1,0 +1,44 @@
+using System;
+
+public class Enums 
+{
+    public static string EnumToString<T>(T _enumValue) where T : Enum
+    {
+        return Enum.GetName(typeof(T), _enumValue);
+    }
+
+    public static int EnumToValue<T>(T _enumValue) where T : Enum
+    {
+        return Convert.ToInt32(_enumValue);
+    }
+}
+
+namespace UtilEnums
+{
+    public enum SceneEnums
+    {
+        TitleScene = 0,
+        MainScene = 1,
+    }
+
+    public enum LayerEnums
+    {
+        Default = 0,
+        TransparentFX=1,
+        IgnoreRaycast=2,
+        Hero = 3,
+        Water=4,
+        UI =5,
+        Climable = 6,
+        Monster=7,
+    }
+}
+
+
+namespace MonsterEnums
+{
+    public enum MonsterID
+    {
+        Zombie = 0,
+    }
+}
