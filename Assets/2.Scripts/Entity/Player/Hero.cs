@@ -6,6 +6,7 @@ public class Hero : BaseEntity
 {
     public override void Init()
     {
+        base.Init();
     }
 
     public override void Setup()

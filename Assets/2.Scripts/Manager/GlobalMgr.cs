@@ -5,4 +5,5 @@ using UnityEngine;
 public static class GlobalMgr 
 {
     public static ResourceMgr Resource = null;
+    public static PoolMgr Pool = null;
 }

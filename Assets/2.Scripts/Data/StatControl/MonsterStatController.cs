@@ -7,7 +7,7 @@ public class MonsterStatController
 {
     BaseMonster monster = null;
     
-    public MonsterStatController(BaseMonster _monster, MonsterID _monsterID = MonsterID.Zombie)
+    public MonsterStatController(BaseMonster _monster, MonsterIDEnums _monsterID = MonsterIDEnums.Zombie)
     {
         if (monster == null) monster = _monster;
     }

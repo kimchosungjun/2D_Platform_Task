@@ -30,14 +30,30 @@ namespace UtilEnums
         Water=4,
         UI =5,
         Climable = 6,
-        Monster=7,
+        Truck = 7,
+        Monster_Line1 =11,
+        Monster_Line2 =12,
+        Monster_Line3 =13,
+        Monster_Line4 =14,
+    }
+
+    public enum PoolParentEnums
+    {
+        Monster=0,
+        Bullet=1,
+    }
+
+    public enum PoolEnums
+    {
+        Zombie = 0,
+        Bullet = 1,
     }
 }
 
 
 namespace MonsterEnums
 {
-    public enum MonsterID
+    public enum MonsterIDEnums
     {
         Zombie = 0,
     }

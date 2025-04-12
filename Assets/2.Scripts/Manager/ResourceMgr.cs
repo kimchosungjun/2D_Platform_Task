@@ -4,5 +4,8 @@ using UnityEngine;
 
 public class ResourceMgr 
 {
-    public int resourceID = 0;  
+    public T LoadResource<T>(string _path) where T : Object
+    {
+        return Resources.Load<T>(_path);
+    }
 }
