@@ -21,6 +21,12 @@ namespace UtilEnums
         MainScene = 1,
     }
 
+    public enum TagEnums
+    {
+        Hero,
+        Enemy,
+    }
+
     public enum LayerEnums
     {
         Default = 0,
@@ -47,6 +53,11 @@ namespace UtilEnums
     {
         Zombie = 0,
         Bullet = 1,
+    }
+
+    public enum BulletEnums
+    {
+        Bullet = 0,
     }
 }
 

@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Hero
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -12,11 +13,11 @@ TagManager:
   - Hero
   - Water
   - UI
-  - Climable
-  - Truck
+  - HeroBox
+  - HeroAttack
   - Test
   - Ground
-  - 
+  - Bullet
   - Monster_Line1
   - Monster_Line2
   - Monster_Line3
