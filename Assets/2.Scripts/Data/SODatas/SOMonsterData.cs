@@ -9,4 +9,10 @@ public class SOMonsterData : ScriptableObject
     public int monsterAtk;
     public int monsterDef;
     public float monsterSpeed;
+
+    public MonsterData GetMonsterData()
+    {
+        MonsterData data = new MonsterData(monsterHP, monsterAtk, monsterDef, monsterSpeed);
+        return data;
+    }
 }

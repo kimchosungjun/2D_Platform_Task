@@ -30,7 +30,7 @@ public abstract class BaseMonster : BaseEntity
         if(rb==null) rb=  GetComponent<Rigidbody2D>();
         if(coll == null) coll = GetComponentInChildren<CapsuleCollider2D>();
         if (sprites == null) sprites = GetComponentsInChildren<SpriteRenderer>();
-        if (monsterStatController == null) monsterStatController = new MonsterStatController(this , monsterID);
+        if (monsterStatController == null) monsterStatController = new MonsterStatController(this);
     }
 
     public override void Setup()

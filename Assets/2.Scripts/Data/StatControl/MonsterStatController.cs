@@ -6,8 +6,9 @@ using UnityEngine;
 public class MonsterStatController 
 {
     BaseMonster monster = null;
+    //MonsterData monsterData = null;
     
-    public MonsterStatController(BaseMonster _monster, MonsterIDEnums _monsterID = MonsterIDEnums.Zombie)
+    public MonsterStatController(BaseMonster _monster)
     {
         if (monster == null) monster = _monster;
     }

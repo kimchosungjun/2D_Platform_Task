@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class GameSystem : OperateByScene
 {
+    [SerializeField] FadeUI fadeUI;
     void Awake()
     {
         Init();   
     }
     public override void Init()
     {
+        if(fadeUI==null)
+            fadeUI = FindObjectOfType<FadeUI>();    
     }
 
     void Start()
@@ -19,7 +22,7 @@ public class GameSystem : OperateByScene
 
     public override void Setup()
     {
-        //StartCoroutine(StartPool());
+        fadeUI.Fade(true, () => { fadeUI.gameObject.SetActive(false); });
     }
 
     IEnumerator StartPool()
