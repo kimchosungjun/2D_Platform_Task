@@ -12,6 +12,7 @@ public class PoolMgr : MonoBehaviour
     void Awake()
     {
         GlobalMgr.Pool = this;
+        
     }
 
     public Transform GetPool(PoolEnums _poolEnums, PoolParentEnums _poolParentEnums = PoolParentEnums.Monster)

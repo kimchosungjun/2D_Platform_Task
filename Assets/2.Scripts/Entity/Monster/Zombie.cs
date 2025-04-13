@@ -1,24 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.VFX;
 
 public class Zombie : BaseMonster
 {
+    Vector2 jumpDirection;
     [SerializeField] float jumpForce = 2f;
     [SerializeField] float moveSpeed = 2f;
-    Vector2 jumpDirection;
     [SerializeField] bool isGround = false;
     [SerializeField] bool isFrontWall = false;
     [SerializeField] bool isHead = false;
     [SerializeField] LayerMask wallLayer;
     [SerializeField] LayerMask groundLayer;
+
     #region Unity Life Cycle
 
     [Header("Limit")]
     [SerializeField] float limitXSpeed = 3f;
     [SerializeField] float limitYSpeed = 3f;
+
+    [Header("Transforms")]
     [SerializeField] Transform headTf;
     [SerializeField] Transform groundTf;
 
@@ -68,6 +69,7 @@ public class Zombie : BaseMonster
     void FixedUpdate()
     {
         Detect();
+
         //if (coolDownMove) return;
         if (isHead || coolDownMove) return;
 
@@ -90,7 +92,7 @@ public class Zombie : BaseMonster
         if (hit.collider != null && !isFrontWall && isGround)
         {
             rb.AddForce(jumpDirection * jumpForce, ForceMode2D.Impulse);
-            //hit.collider.GetComponent<Rigidbody2D>()?.AddForce(Vector2.right * 3f, ForceMode2D.Impulse);
+            //hit.collider.GetComponent<Rigidbody2D>()?.AddForce(Vector2.down, ForceMode2D.Impulse);
         }
 
         // Move

@@ -35,12 +35,12 @@ namespace UtilEnums
         Hero = 3,
         Water=4,
         UI =5,
-        Climable = 6,
-        Truck = 7,
+        HeroBox = 6,
+        HeroAttack = 7,
+        Ground = 8,
         Monster_Line1 =11,
         Monster_Line2 =12,
         Monster_Line3 =13,
-        Monster_Line4 =14,
     }
 
     public enum PoolParentEnums

@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LinkMgr : MonoBehaviour
+public class LinkMgr
 {
-    void Awake()
+    public void Init()
     {
         GlobalMgr.Resource = new ResourceMgr();    
     }
 
-    void Start()
+    public void Setup()
     {
         
     }
