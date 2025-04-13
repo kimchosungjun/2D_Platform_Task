@@ -37,7 +37,7 @@ namespace UtilEnums
         UI =5,
         HeroBox = 6,
         HeroAttack = 7,
-        Ground = 8,
+        Map = 8,
         Monster_Line1 =11,
         Monster_Line2 =12,
         Monster_Line3 =13,
@@ -47,6 +47,7 @@ namespace UtilEnums
     {
         Monster=0,
         Bullet=1,
+        DamageLog=2,
     }
 
     public enum PoolEnums

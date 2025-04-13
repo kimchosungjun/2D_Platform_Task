@@ -5,17 +5,16 @@ using UtilEnums;
 
 public class PoolMgr : MonoBehaviour
 {
-    [Header("0 : Monster, 1 : Bullet")]
+    [Header("0 : Monster, 1 : Bullet, 2 : Damage Log")]
     [SerializeField] Transform[] poolParents;
     Dictionary<PoolEnums, List<Transform>> poolGroup = new Dictionary<PoolEnums, List<Transform>>();
     
     void Awake()
     {
         GlobalMgr.Pool = this;
-        
     }
 
-    public Transform GetPool(PoolEnums _poolEnums, PoolParentEnums _poolParentEnums = PoolParentEnums.Monster)
+    public Transform GetPool(PoolEnums _poolEnums, PoolParentEnums _poolParentEnums, Vector3 _position, Quaternion _identity)
     {
         if (poolGroup.ContainsKey(_poolEnums))
         {
@@ -24,12 +23,16 @@ public class PoolMgr : MonoBehaviour
             for(int i=0; i<listCnt; i++)
             {
                 if (list[i].gameObject.activeSelf == false)
+                {
+                    list[i].position = _position;
+                    list[i].rotation = _identity;
                     return list[i];
+                }
             }
 
             Transform loadTransform = GlobalMgr.Resource.LoadResource<Transform>("Pool/"+Enums.EnumToString(_poolEnums));
             if (loadTransform == null) { Debug.LogError("Error!! Pool Error"); return null; }
-            Transform instTransform = Instantiate(loadTransform, poolParents[(int)_poolParentEnums]);
+            Transform instTransform = Instantiate(loadTransform,_position, _identity, poolParents[(int)_poolParentEnums]);
             poolGroup[_poolEnums].Add(instTransform);
             return instTransform;
         }
@@ -38,7 +41,7 @@ public class PoolMgr : MonoBehaviour
             List<Transform> newList = new List<Transform>();
             Transform loadTransform = GlobalMgr.Resource.LoadResource<Transform>("Pool/" + Enums.EnumToString(_poolEnums));
             if (loadTransform == null) { Debug.LogError("Error!! Pool Error"); return null; }
-            Transform instTransform = Instantiate(loadTransform, poolParents[(int)_poolParentEnums]);
+            Transform instTransform = Instantiate(loadTransform, _position, _identity, poolParents[(int)_poolParentEnums]);
             newList.Add(instTransform);
             poolGroup.Add(_poolEnums, newList);
             return instTransform;
@@ -47,12 +50,9 @@ public class PoolMgr : MonoBehaviour
 
     public void ClearPool()
     {
-        //List<string> poolParentNames = new List<string>();
         int poolParentCnt = poolParents.Length;
         for(int i=0; i<poolParentCnt; i++)
         {
-            //string poolName = poolParents[i].name;
-            //poolParentNames.Add(poolName);
             Destroy(poolParents[i]);
         }
 

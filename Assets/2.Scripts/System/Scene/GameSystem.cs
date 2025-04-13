@@ -25,16 +25,16 @@ public class GameSystem : OperateByScene
         fadeUI.Fade(true, () => { fadeUI.gameObject.SetActive(false); });
     }
 
-    IEnumerator StartPool()
-    {
-        while (true)
-        {
-            Vector3 Pos = new Vector3(8, -4, 0);
-            Transform tf = GlobalMgr.Pool.GetPool(UtilEnums.PoolEnums.Zombie);
-            tf.position = Pos;
-            if (tf.gameObject.activeSelf == false)
-                tf.gameObject.SetActive(true);
-            yield return new WaitForSeconds(3f);
-        }
-    }
+    //IEnumerator StartPool()
+    //{
+    //    while (true)
+    //    {
+    //        Vector3 Pos = new Vector3(8, -4, 0);
+    //        Transform tf = GlobalMgr.Pool.GetPool(UtilEnums.PoolEnums.Zombie);
+    //        tf.position = Pos;
+    //        if (tf.gameObject.activeSelf == false)
+    //            tf.gameObject.SetActive(true);
+    //        yield return new WaitForSeconds(3f);
+    //    }
+    //}
 }
