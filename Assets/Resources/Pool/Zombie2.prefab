@@ -611,6 +611,7 @@ MonoBehaviour:
   limitYSpeed: 3
   headTf: {fileID: 7043141286792737326}
   groundTf: {fileID: 4541915866432592184}
+  backTf: {fileID: 3147052806634660419}
 --- !u!1 &6472828620527125161
 GameObject:
   m_ObjectHideFlags: 0

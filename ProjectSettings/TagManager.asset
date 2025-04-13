@@ -15,9 +15,9 @@ TagManager:
   - UI
   - HeroBox
   - HeroAttack
-  - Test
   - Ground
-  - Bullet
+  - Map
+  - 
   - Monster_Line1
   - Monster_Line2
   - Monster_Line3

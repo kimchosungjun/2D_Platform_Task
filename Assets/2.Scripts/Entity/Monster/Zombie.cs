@@ -22,6 +22,7 @@ public class Zombie : BaseMonster
     [Header("Transforms")]
     [SerializeField] Transform headTf;
     [SerializeField] Transform groundTf;
+    [SerializeField] Transform backTf;
 
     protected int headLayer = 8;
     protected int wall = 7; 
@@ -49,6 +50,9 @@ public class Zombie : BaseMonster
     RaycastHit2D wallHit;
     RaycastHit2D groundHit;
     RaycastHit2D headHit;
+    RaycastHit2D backHit;
+
+    bool isBack = false;
 
     Collider2D coll2D = null;
 
@@ -87,9 +91,16 @@ public class Zombie : BaseMonster
         else
             isFrontWall = false;
 
+        // Back
+        backHit = Physics2D.Raycast(backTf.position, Vector2.right, 0.2f, detectLayer);
+        if (backHit.collider != null)
+            isBack = true;
+        else
+            isBack = false;
+
         // Jump
         hit = Physics2D.Raycast(detectTransform.position, Vector2.left, 0.1f, detectLayer);
-        if (hit.collider != null && !isFrontWall && isGround)
+        if (hit.collider != null && !isFrontWall && isGround && !isBack)
         {
             rb.AddForce(jumpDirection * jumpForce, ForceMode2D.Impulse);
             //hit.collider.GetComponent<Rigidbody2D>()?.AddForce(Vector2.down, ForceMode2D.Impulse);
