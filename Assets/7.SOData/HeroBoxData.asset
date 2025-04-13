@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 416a85b48767b9e4282c8bcf12742ebb, type: 3}
   m_Name: HeroBoxData
   m_EditorClassIdentifier: 
-  heroHP: 60
+  heroHP: 80
   heroDef: 0

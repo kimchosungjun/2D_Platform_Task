@@ -10,7 +10,7 @@ public class TitleFadeTextUI : MonoBehaviour
     int curIndex = 0;
     string[] infoText = new string[2]
     {
-        "타워 데스티니\n 서바이벌",
+        "타워 데스티니\n 서바이브",
         "Client Task\n by 조성준"
     };
 

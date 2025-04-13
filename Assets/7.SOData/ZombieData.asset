@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ZombieData
   m_EditorClassIdentifier: 
   monsterHP: 100
-  monsterAtk: 10
+  monsterAtk: 5
   monsterDef: 1
   monsterSpeed: 3
   monsterJumpForce: 3
