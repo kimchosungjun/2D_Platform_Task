@@ -1,11 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class DamageLogUI : MonoBehaviour
 {
+    [SerializeField] Canvas canvas;
     [SerializeField] TextMeshProUGUI floatText;
     [SerializeField] Animator anim;
     [SerializeField] float floatTime = 1.5f;
@@ -14,11 +13,20 @@ public class DamageLogUI : MonoBehaviour
     void Awake()
     {
         waitTime = new WaitForSeconds(floatTime);
-        if(anim == null) anim = GetComponent<Animator>();   
+        if(anim == null) anim = GetComponent<Animator>();
+        if(canvas ==null) canvas = GetComponentInChildren<Canvas>();
+    }
+
+    void Start()
+    {
+        canvas.worldCamera = Camera.main;    
     }
 
     public void SetDamage(int _damage)
     {
+        if (this.gameObject.activeSelf == false)
+            this.gameObject.SetActive(true);
+
         floatText.text = _damage.ToString();
         anim.Play("Effect");
         StartCoroutine(CDisable());

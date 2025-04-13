@@ -22,6 +22,8 @@ public class HitEffect : MonoBehaviour
     {
         if(_sprites==null)
             sprites = GetComponentsInChildren<SpriteRenderer>();
+        else
+            sprites = _sprites;
 
         isScaleEffect = _isScaleEffect;
         fixedTime = new WaitForFixedUpdate();

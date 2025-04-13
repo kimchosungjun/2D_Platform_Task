@@ -1,47 +1,54 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UtilEnums;
 
 public class Zombie : BaseMonster
 {
-    Vector2 jumpDirection;
-    [SerializeField] float jumpForce = 2f;
-    [SerializeField] float moveSpeed = 2f;
-    [SerializeField] bool isGround = false;
-    [SerializeField] bool isFrontWall = false;
-    [SerializeField] bool isHead = false;
+    #region Variable : Detect
+    // RaycastHit
+    RaycastHit2D frontHit; // Detect Same Line Monster
+    RaycastHit2D backHit; // Detect Same Line Monster
+    RaycastHit2D aboveHit; // Detect Above Same Line Monster
+    RaycastHit2D groundHit; // Detect Ground & Same Line Monster
+    RaycastHit2D heroHit; // Detect Player
 
-    [SerializeField] LayerMask wallLayer;
-    [SerializeField] LayerMask groundLayer;
+    // Transform
+    [Header("0 : Front, 1 : Above, 2 : Ground, 3 : Back")]
+    [SerializeField] Transform[] detectTransfroms;
 
-    #region Unity Life Cycle
+    enum DetectEnum
+    {
+        Front = 0,
+        Above =1,
+        Ground =2,
+        Back =3,
+    }
 
-    [Header("Limit")]
+    bool isKnockBack = false;
+    bool isGround = false;
+    bool isFrontHero = false;
+    bool isAbove = false;
+    bool isBack = false;
+
+    int heroLayer = 0;
+    int groundLayer = 0;
+    #endregion
+
+    #region Variable : Movement
+    [Header("Limit Speed")]
     [SerializeField] float limitXSpeed = 3f;
     [SerializeField] float limitYSpeed = 3f;
 
-    [Header("Transforms")]
-    [SerializeField] Transform headTf;
-    [SerializeField] Transform groundTf;
-    [SerializeField] Transform backTf;
-    [Header("Detect")]
-    [SerializeField] protected Transform detectTransform;
+    [Header("Knock Back")]
+    [SerializeField] float knockBackForce = 2.5f;
+    [SerializeField] float knockBackTime = 1f;
+    float moveSpeed = 0;
+    float jumpForce = 0;
+    Vector2 jumpDirection;
+    #endregion
 
-    protected int headLayer = 8;
-    protected int wall = 7; 
-    protected bool coolDownMove = false;
-    protected float coolDownTime = 0.5f;
-
-
-    RaycastHit2D hit;
-    RaycastHit2D wallHit;
-    RaycastHit2D groundHit;
-    RaycastHit2D headHit;
-    RaycastHit2D backHit;
-
-    bool isBack = false;
-
-    Collider2D coll2D = null;
+    #region Unity Life Cycle : Awake, Starat (Setting)
 
     void Awake()
     {
@@ -57,67 +64,99 @@ public class Zombie : BaseMonster
     void Start()
     {
         Setup();
-        monsterLayer = 1 << 8;
+        moveSpeed = statController.GetMonsterData().monsterSpeed;
+        jumpForce = statController.GetMonsterData().monsterJumpForce;
+        heroLayer = 1 << (int)LayerEnums.Hero | 1 << (int)LayerEnums.HeroBox;
     }
 
-
-
-    void Detect()
+    public override void Pooling(LayerEnums _layerEnums)
     {
-        coll2D = Physics2D.OverlapBox(headTf.position, new Vector2(0.4f, 0.1f), 360f, monsterLayer);
-        if (coll2D != null && coolDownMove == false)
-        {
-            StartCoroutine(CCoolDownMove());
-            rigid.velocity = new Vector2(0, rigid.velocity.y);
-            isHead = true;
-            rigid.AddForce(Vector2.right * 2.5f, ForceMode2D.Impulse);
-        }
-        else
-            isHead = false;
+        base.Pooling(_layerEnums);
+        groundLayer = monsterLayer;
     }
+
+    #endregion
+
+    # region Unity Life Cycle : FixedUpdate (Operate AI)
 
     void FixedUpdate()
     {
-        Detect();
+        DetectAbove();
 
-        //if (coolDownMove) return;
-        if (isHead || coolDownMove) return;
+        if (isAbove || isKnockBack) return;
 
-        // Ground
-        groundHit = Physics2D.Raycast(groundTf.position, Vector2.down, 1f, groundLayer);
+        DetectGround();
+        DetectFront();
+        DetectBack();
+        Jump();
+        HorizontalMove();
+        LimitSpeed();
+    }
+
+    // Check Detect Layer
+    #region Relate Detect
+    void DetectAbove()
+    {
+        Collider2D coll2D = Physics2D.OverlapBox(detectTransfroms[1].position, new Vector2(0.4f, 0.1f), 360f, monsterLayer);
+        if (coll2D != null && isKnockBack == false)
+        {
+            rigid.velocity = new Vector2(0, rigid.velocity.y);
+            StartCoroutine(CKnockBack());
+            isAbove = true;
+        }
+        else
+            isAbove = false;
+    }
+
+    IEnumerator CKnockBack()
+    {
+        isKnockBack = true;
+        rigid.AddForce(Vector2.right * knockBackForce, ForceMode2D.Impulse);
+        yield return new WaitForSeconds(knockBackTime);
+        isKnockBack = false;
+    }
+
+    void DetectGround()
+    {
+        groundHit = Physics2D.Raycast(detectTransfroms[2].position, Vector2.down, 1f, groundLayer);
         if (groundHit.collider != null)
             isGround = true;
         else
             isGround = false;
+    }
 
-        // Wall
-        wallHit = Physics2D.Raycast(detectTransform.position, Vector2.left, 0.2f, wallLayer);
-        if (wallHit.collider != null)
-            isFrontWall = true;
+    void DetectFront()
+    {
+        heroHit = Physics2D.Raycast(detectTransfroms[0].position, Vector2.left, 0.2f, heroLayer);
+        if (heroHit.collider != null)
+            isFrontHero = true;
         else
-            isFrontWall = false;
+            isFrontHero = false;
+    }
 
-        // Back
-        backHit = Physics2D.Raycast(backTf.position, Vector2.right, 0.2f, monsterLayer);
+    void DetectBack()
+    {
+        backHit = Physics2D.Raycast(detectTransfroms[3].position, Vector2.right, 0.2f, monsterLayer);
         if (backHit.collider != null)
             isBack = true;
         else
             isBack = false;
+    }
+    #endregion
 
-        // Jump
-        hit = Physics2D.Raycast(detectTransform.position, Vector2.left, 0.1f, monsterLayer);
-        if (hit.collider != null && !isFrontWall && isGround && !isBack)
-        {
+    // Control Movement
+    #region Movement
+    void Jump()
+    {
+        frontHit = Physics2D.Raycast(detectTransfroms[0].position, Vector2.left, 0.1f, monsterLayer);
+        if (frontHit.collider != null && !isFrontHero && isGround && !isBack)
             rigid.AddForce(jumpDirection * jumpForce, ForceMode2D.Impulse);
-            //hit.collider.GetComponent<Rigidbody2D>()?.AddForce(Vector2.down, ForceMode2D.Impulse);
-        }
+    }
 
-        // Move
-        if (!isFrontWall && hit.collider == null && !coolDownMove && isGround)
-        {
+    void HorizontalMove()
+    {
+        if (!isFrontHero && frontHit.collider == null && !isKnockBack && isGround)
             rigid.AddForce(Vector2.left * moveSpeed, ForceMode2D.Impulse);
-        }
-        LimitSpeed();
     }
 
     void LimitSpeed()
@@ -131,18 +170,6 @@ public class Zombie : BaseMonster
         rigid.velocity = new Vector2(xSpeed, ySpeed);
     }
     #endregion
-
-    IEnumerator CCoolDownMove()
-    {
-        float time = 0f;
-        coolDownMove = true;
-        while (time < coolDownTime)
-        {
-            time += Time.deltaTime;
-            //rb.velocity = new Vector2(0, rb.velocity.y);
-            yield return null;
-        }
-        coolDownMove = false;
-        rigid.velocity = new Vector2(0, rigid.velocity.y);
-    }
+    
+    #endregion
 }

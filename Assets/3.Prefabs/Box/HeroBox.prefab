@@ -573,12 +573,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 950dda7b6f12beb4289cb1eb185a57b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soProjectileData: {fileID: 11400000, guid: aad68b606191de342a823648118d477a, type: 2}
   shootTransform: {fileID: 3412757070755682094}
   gunTransform: {fileID: 6203042490645284440}
-  bulletPrefab: {fileID: 6551099050442132215, guid: 2457e7301fde5ef4cb73900f2d189aa0, type: 3}
-  fireInterval: 3
-  bulletSpeed: 10
   angleOffset: 30
+  fireTermTime: 3
 --- !u!1 &6872163726244765423
 GameObject:
   m_ObjectHideFlags: 0

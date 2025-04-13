@@ -54,11 +54,7 @@ namespace UtilEnums
     {
         Zombie = 0,
         Bullet = 1,
-    }
-
-    public enum BulletEnums
-    {
-        Bullet = 0,
+        DamageLog = 2,
     }
 }
 

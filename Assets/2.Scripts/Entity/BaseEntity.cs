@@ -2,7 +2,8 @@ using UnityEngine;
 
 public abstract class BaseEntity : MonoBehaviour
 {
-    protected SpriteRenderer[] sprites;
+    [Header("Monster SpriteRenderers")]
+    [SerializeField] protected SpriteRenderer[] sprites;
     /*[SerializeField]*/ protected HitEffect hitEffect;
 
     public virtual void Init()
@@ -11,5 +12,5 @@ public abstract class BaseEntity : MonoBehaviour
         if (hitEffect==null) hitEffect = GetComponent<HitEffect>();
         hitEffect.Init(sprites);
     }
-    public abstract void Setup();
+    public virtual void Setup() { }
 }

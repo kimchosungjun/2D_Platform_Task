@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d514199d54839c40885dcd066567749, type: 3}
   m_Name: ProjectileData
   m_EditorClassIdentifier: 
-  launchSpeed: 4
-  damage: 70
+  launchSpeed: 10
+  maintainTime: 10
+  damage: 15

@@ -25,6 +25,6 @@ public class GameSystem : OperateByScene
     public override void Setup()
     {
         //fadeUI.Fade(true, () => { fadeUI.gameObject.SetActive(false); });
-        //MonsterMgr.Instance.StartSpawn();
+        MonsterMgr.Instance.StartSpawn();
     }
 }

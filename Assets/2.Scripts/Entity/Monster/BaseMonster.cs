@@ -27,11 +27,6 @@ public abstract class BaseMonster : BaseEntity
         if(coll == null) coll = GetComponentInChildren<CapsuleCollider2D>();
         if(statController == null) statController = GetComponentInChildren<MonsterStatController>();
     }
-
-    public override void Setup()
-    {
-        monsterLayer = 0;
-    }
     #endregion
 
     #region Relate Pooling
@@ -52,15 +47,16 @@ public abstract class BaseMonster : BaseEntity
         int layerValue = (int)_layerEnums;
         this.gameObject.layer = (int)_layerEnums;
         monsterLayer = 1 << layerValue;
-        int sprCnt = sprites.Length;
-        for(int i=0; i<sprCnt; i++)
-            sprites[i].sortingOrder = layerValue-10;
     }
 
     protected virtual void SetMonsterData()  { statController.ResetStat(); }
     #endregion
 
     #region Relate State
-    public virtual void Death() { this.gameObject.SetActive(false); }
+    public virtual void Death() 
+    {
+        this.gameObject.SetActive(false);
+        MonsterMgr.Instance.DecreaseMonsterCnt();
+    }
     #endregion
 }

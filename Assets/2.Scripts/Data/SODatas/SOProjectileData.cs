@@ -6,6 +6,13 @@ using UnityEngine;
 public class SOProjectileData : ScriptableObject
 {
     public float launchSpeed;
+    public float maintainTime;
     public int damage;
+
+    public ProjectileData GetProjectileData()
+    {
+        ProjectileData projectileData = new ProjectileData(launchSpeed, maintainTime, damage);
+        return projectileData;
+    }
 }
 

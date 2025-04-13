@@ -376,3 +376,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvas: {fileID: 8591811020709778590}
   fillImage: {fileID: 4632347352385846953}
+  showTime: 2

@@ -1,27 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TowerGunAI : MonoBehaviour
 {
+    [SerializeField] protected SOProjectileData soProjectileData;
     [SerializeField] protected Transform shootTransform;
-    [SerializeField] protected Transform gunTransform; // 총구 회전축
-    public GameObject bulletPrefab; // 총알 프리팹
-    public float fireInterval = 3f;
-    public float bulletSpeed = 10f;
-    public float angleOffset = 5f; // 위/아래 각도
+    [SerializeField] protected Transform gunTransform; 
+    [SerializeField] float angleOffset = 5f;
+    [SerializeField] float sightDist = 20f;
+    public float fireTermTime = 3f;
     private float fireTimer = 0f;
+    float minDist = Mathf.Infinity;
 
-    void Update()
+    void FixedUpdate()
     {
         Transform target = FindClosestEnemy();
         if (target != null)
-        {
             RotateToTarget(target.position);
-        }
 
-        fireTimer += Time.deltaTime;
-        if (fireTimer >= fireInterval)
+        if(fireTermTime + 1f > fireTimer)
+            fireTimer += Time.fixedDeltaTime;
+        
+        if (fireTimer >= fireTermTime && target!=null)
         {
             FireBullets();
             fireTimer = 0f;
@@ -30,26 +29,25 @@ public class TowerGunAI : MonoBehaviour
 
     Transform FindClosestEnemy()
     {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        GameObject[] enemyObjects = GameObject.FindGameObjectsWithTag("Enemy");
         Transform closest = null;
-        float minDist = Mathf.Infinity;
-
-        foreach (GameObject enemy in enemies)
+        minDist = Mathf.Infinity;
+        int cnt = enemyObjects.Length;
+        for(int i=0; i<cnt; i++)
         {
-            float dist = Vector2.Distance(transform.position, enemy.transform.position);
-            if (dist < minDist)
+            float dist = Vector2.Distance(transform.position, enemyObjects[i].transform.position);
+            if (dist < minDist && dist < sightDist)
             {
                 minDist = dist;
-                closest = enemy.transform;
+                closest = enemyObjects[i].transform;
             }
         }
-
         return closest;
     }
 
-    void RotateToTarget(Vector2 targetPos)
+    void RotateToTarget(Vector2 _targetPos)
     {
-        Vector2 direction = targetPos - (Vector2)transform.position;
+        Vector2 direction = _targetPos - (Vector2)transform.position;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         gunTransform.rotation = Quaternion.Euler(0, 0, angle);
     }
@@ -57,22 +55,18 @@ public class TowerGunAI : MonoBehaviour
     void FireBullets()
     {
         float baseAngle = gunTransform.eulerAngles.z;
-
-        FireBulletAtAngle(baseAngle);                     // 정면
-        FireBulletAtAngle(baseAngle + angleOffset);       // 위로 30도
-        FireBulletAtAngle(baseAngle - angleOffset);       // 아래로 30도
+        FireBullet(baseAngle);                     
+        FireBullet(baseAngle + angleOffset);
+        FireBullet(baseAngle - angleOffset); 
     }
 
-    void FireBulletAtAngle(float angle)
+    void FireBullet(float _angle)
     {
-        float rad = angle * Mathf.Deg2Rad;
+        float rad = _angle * Mathf.Deg2Rad;
         Vector2 direction = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
-
-        // 회전 각도 계산 (총알이 위를 바라보고 있을 때)
         float bulletAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
         Quaternion rotation = Quaternion.Euler(0, 0, bulletAngle);
-
-        GameObject bullet = Instantiate(bulletPrefab, shootTransform.position, rotation);
-        bullet.GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
+        /*Transform bulletTransform = */GlobalMgr.PoolMgr.GetPool(UtilEnums.PoolEnums.Bullet, UtilEnums.PoolParentEnums.Bullet, shootTransform.position, rotation).
+            GetComponent<Projectile>().SetData(soProjectileData.GetProjectileData(), UtilEnums.TagEnums.Enemy, direction);
     }
 }

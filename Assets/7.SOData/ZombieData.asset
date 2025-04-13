@@ -16,3 +16,4 @@ MonoBehaviour:
   monsterAtk: 7
   monsterDef: 1
   monsterSpeed: 3
+  monsterJumpForce: 3

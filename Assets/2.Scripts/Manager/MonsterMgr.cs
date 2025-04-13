@@ -82,7 +82,7 @@ public class MonsterMgr : MonoBehaviour
     IEnumerator CSpawnMonster(float _nextSpawnTime, LayerEnums _monsterLayer)
     {
         int delta = (int)_monsterLayer - 11;
-        Vector3 spawnPos = new Vector3(-9, -4 +delta * 0.1f , 0);
+        Vector3 spawnPos = new Vector3(9, -3, delta);
         Quaternion identity = Quaternion.identity;
 
         yield return new WaitForSeconds(_nextSpawnTime);
