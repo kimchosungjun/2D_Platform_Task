@@ -1,25 +1,53 @@
-using MonsterEnums;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class MonsterStatController 
+public class MonsterStatController : StatController 
 {
-    BaseMonster monster = null;
-    //MonsterData monsterData = null;
-    
-    public MonsterStatController(BaseMonster _monster)
+    [Header("Must Set")]
+    [SerializeField] SOMonsterData soMonsterData;
+    /*[SerializeField]*/ BaseMonster monster = null;
+    /*[SerializeField]*/ HitEffect hitEffect = null;
+
+    MonsterData monsterData = null; 
+
+    void Awake()
     {
-        if (monster == null) monster = _monster;
+        if(monster==null) monster = GetComponent<BaseMonster>();
+        if(hitEffect==null) hitEffect = GetComponent<HitEffect>();
+        if(soMonsterData!=null) monsterData = soMonsterData.GetMonsterData();
     }
 
-    public virtual void Hit(int _damamge)
+    public override void Hit(int _damage)
     {
+        if (monsterData == null) return;
 
+        int damage = _damage - monsterData.monsterDef;
+
+        // Min Damage
+        if (damage <= 0)
+            damage = 1;
+
+        monsterData.monsterHP -= damage;
+        if(monsterData.monsterHP<=0)
+            hitEffect?.DoHitEffect(monster.Death);
+        else
+            hitEffect?.DoHitEffect();
     }
 
-    public void ResetStat()
+    public override void ResetStat()
     {
+        if (monsterData == null) return;
+        monsterData = soMonsterData.GetMonsterData();
+    }
 
+    public MonsterData GetMonsterData()
+    {
+        if (monsterData != null)
+            return monsterData;
+
+        if (soMonsterData == null)
+            return null;
+        monsterData = soMonsterData.GetMonsterData();
+        
+        return monsterData;
     }
 }

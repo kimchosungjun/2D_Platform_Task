@@ -1,88 +1,66 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UtilEnums;
-using MonsterEnums;
-using System;
 
 public abstract class BaseMonster : BaseEntity
 {
+    // Values : Common Component, This Layer 
     #region Variables
-    [Header("Common Value")]
-    [SerializeField] protected MonsterIDEnums monsterID = MonsterIDEnums.Zombie;
-    protected int climbLayer = 0;
-    protected int spriteLayer = 0;
-    protected int detectLayer = 0;
+    //[Header("Common Value")]
+    protected int monsterLayer;
+    //[SerializeField] protected MonsterIDEnums monsterID = MonsterIDEnums.Zombie;
 
-    [Header("Common Component")]
-    [SerializeField] protected Animator anim;
-    [SerializeField] protected Rigidbody2D rb; 
-    [SerializeField] protected CapsuleCollider2D coll;
-    [SerializeField] protected Transform detectTransform;
-    protected MonsterStatController monsterStatController = null;
+    //[Header("Common Component")]
+    /*[SerializeField] */protected Animator anim;
+    /*[SerializeField] */protected Rigidbody2D rigid; 
+    /*[SerializeField] */protected CapsuleCollider2D coll;
+    /*[SerializeField] */protected MonsterStatController statController; 
+
     #endregion
 
+    // Functions : Common Function(Setting, Pooling, Death)
     #region Relate Setting
     public override void Init()
     {
         base.Init();
         if(anim==null) anim = GetComponentInChildren<Animator>();   
-        if(rb==null) rb=  GetComponent<Rigidbody2D>();
+        if(rigid==null) rigid=  GetComponent<Rigidbody2D>();
         if(coll == null) coll = GetComponentInChildren<CapsuleCollider2D>();
-        if (sprites == null) sprites = GetComponentsInChildren<SpriteRenderer>();
-        if (monsterStatController == null) monsterStatController = new MonsterStatController(this);
+        if(statController == null) statController = GetComponentInChildren<MonsterStatController>();
     }
 
     public override void Setup()
     {
-        //climbLayer = 1 << Enums.EnumToValue(LayerEnums.Climable) 
-        //    | 1 << Enums.EnumToValue(LayerEnums.Monster);
+        monsterLayer = 0;
     }
-    
+    #endregion
+
+    #region Relate Pooling
+
     /// <summary>
     /// Pool : Reuse Monster
     /// </summary>
     /// <param name="_position"></param>
-    public virtual void Pooling(Vector2 _position)
+    public virtual void Pooling(LayerEnums _layerEnums)
     {
-        SetLayerPosition( _position);
+        SetLayer( _layerEnums);
         SetMonsterData();
     }
 
-    void SetLayerPosition(Vector2 _position)
+    void SetLayer(LayerEnums _layerEnums)
     {
-
-        // Set Layer
-        detectLayer = 0;
-        Tuple<LayerEnums,int> getTuple= Randoms.GetRandomLayer();
-
-        this.gameObject.layer = (int)getTuple.Item1;
-        spriteLayer = getTuple.Item2;
-        detectLayer = 1 << (int)getTuple.Item2;
-
+        monsterLayer = 0;
+        int layerValue = (int)_layerEnums;
+        this.gameObject.layer = (int)_layerEnums;
+        monsterLayer = 1 << layerValue;
         int sprCnt = sprites.Length;
         for(int i=0; i<sprCnt; i++)
-            sprites[i].sortingOrder = getTuple.Item2;
-
-        // Set Position
-        transform.position = _position;
-        transform.position += Vector3.down * 0.5f * getTuple.Item2; 
+            sprites[i].sortingOrder = layerValue-10;
     }
 
-    // To Do ~~ Data
-    protected virtual void SetMonsterData() { }
-
+    protected virtual void SetMonsterData()  { statController.ResetStat(); }
     #endregion
 
     #region Relate State
-    public virtual void Hit(int _damage)
-    {
-        monsterStatController?.Hit(_damage);
-    }
-
-    public virtual void Death()
-    {
-        // To Do Death 
-    }
+    public virtual void Death() { this.gameObject.SetActive(false); }
     #endregion
 }

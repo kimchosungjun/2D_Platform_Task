@@ -11,7 +11,7 @@ public class PoolMgr : MonoBehaviour
     
     void Awake()
     {
-        GlobalMgr.Pool = this;
+        GlobalMgr.PoolMgr = this;
     }
 
     public Transform GetPool(PoolEnums _poolEnums, PoolParentEnums _poolParentEnums, Vector3 _position, Quaternion _identity)
@@ -30,7 +30,7 @@ public class PoolMgr : MonoBehaviour
                 }
             }
 
-            Transform loadTransform = GlobalMgr.Resource.LoadResource<Transform>("Pool/"+Enums.EnumToString(_poolEnums));
+            Transform loadTransform = GlobalMgr.ResourceMgr.LoadResource<Transform>("Pool/"+Enums.EnumToString(_poolEnums));
             if (loadTransform == null) { Debug.LogError("Error!! Pool Error"); return null; }
             Transform instTransform = Instantiate(loadTransform,_position, _identity, poolParents[(int)_poolParentEnums]);
             poolGroup[_poolEnums].Add(instTransform);
@@ -39,7 +39,7 @@ public class PoolMgr : MonoBehaviour
         else
         {
             List<Transform> newList = new List<Transform>();
-            Transform loadTransform = GlobalMgr.Resource.LoadResource<Transform>("Pool/" + Enums.EnumToString(_poolEnums));
+            Transform loadTransform = GlobalMgr.ResourceMgr.LoadResource<Transform>("Pool/" + Enums.EnumToString(_poolEnums));
             if (loadTransform == null) { Debug.LogError("Error!! Pool Error"); return null; }
             Transform instTransform = Instantiate(loadTransform, _position, _identity, poolParents[(int)_poolParentEnums]);
             newList.Add(instTransform);

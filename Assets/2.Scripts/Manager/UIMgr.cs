@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class UIMgr 
 {
-    
+    public MainSceneUIControl MainSceneUIControl { get; set; } = null;
 }

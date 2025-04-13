@@ -6,7 +6,7 @@ public class LinkMgr
 {
     public void Init()
     {
-        GlobalMgr.Resource = new ResourceMgr();    
+        GlobalMgr.ResourceMgr = new ResourceMgr();    
     }
 
     public void Setup()

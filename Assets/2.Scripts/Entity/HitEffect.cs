@@ -1,19 +1,20 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class HitEffect : MonoBehaviour
 {
-    bool isHitEffect = false;
-    bool isScaleEffect = true;
-    [SerializeField] float effectTime = 0.5f;
+    [Header("Must Set")]
+    [SerializeField, Range(0,5f)] float effectTime = 0.5f;
     [SerializeField] Transform scaleTransform;
     [SerializeField] Material material;
 
+    bool isScaleEffect = true;
+    bool isHitEffect = false;
     Material currentMat = null;
     SpriteRenderer[] sprites;
     WaitForFixedUpdate fixedTime = null;
-
     Vector3[] scaleEffects;
     Color color = Color.white;
 
@@ -39,13 +40,13 @@ public class HitEffect : MonoBehaviour
         }
     }
 
-    public void DoHitEffect()
+    public void DoHitEffect(UnityAction _action = null)
     {
         if (isHitEffect) return;
-        StartCoroutine(CDoHitEffect());
+        StartCoroutine(CDoHitEffect(_action));
     }
 
-    IEnumerator CDoHitEffect()
+    IEnumerator CDoHitEffect(UnityAction _action = null)
     {
         isHitEffect = true;
         float colorTime = 0f;
@@ -91,5 +92,8 @@ public class HitEffect : MonoBehaviour
         currentMat.SetFloat("_FlashAmount", 0);
         scaleTransform.localScale = new Vector3(1,1,1);
         isHitEffect = false;
+
+        if (_action != null)
+            _action();
     }
 }

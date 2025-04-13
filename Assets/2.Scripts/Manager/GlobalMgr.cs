@@ -1,9 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public static class GlobalMgr 
 {
-    public static ResourceMgr Resource = null;
-    public static PoolMgr Pool = null;
+    public static ResourceMgr ResourceMgr = null;
+    public static UIMgr UIMgr = null;
+
+    // Only Main Scene
+    public static PoolMgr PoolMgr = null;
+    public static MonsterMgr MonsterMgr = null;
 }
