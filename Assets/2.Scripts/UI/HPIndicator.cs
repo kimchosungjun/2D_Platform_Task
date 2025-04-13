@@ -29,7 +29,8 @@ public class HPIndicator : MonoBehaviour
 
         fillImage.fillAmount = 1;
 
-        if(canvas.gameObject.activeSelf)
+        isActive = false;
+        if (canvas.gameObject.activeSelf)
             DecideActiveState(false);
     }
 

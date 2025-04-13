@@ -27,13 +27,19 @@ public class MonsterMgr : MonoBehaviour
     public void UpdatekillLog()
     {
         monsterKillCnt += 1;
-        // To Do UI
+        GlobalMgr.UIMgr.MainSceneUIControl.EnemyKillUI.UpdateKillCnt(monsterKillCnt);
     }
 
     public void ClearKillLog()
     {
+        GlobalMgr.UIMgr.MainSceneUIControl.DeadUI.ActiveDeadUI(monsterKillCnt);
         monsterKillCnt = 0;
-        // To Do UI
+        BaseMonster[] mosters = FindObjectsOfType<BaseMonster>();
+        int cnt = mosters.Length;
+        for(int i=0; i<cnt; i++)
+        {
+            mosters[i].gameObject.SetActive(false);
+        }
     }
     #endregion
 
@@ -61,9 +67,21 @@ public class MonsterMgr : MonoBehaviour
         spawnCors[2] = StartCoroutine(CSpawnMonster(Randoms.GetRandomFloatValue(nextSpawnTerm[0], nextSpawnTerm[1]), LayerEnums.Monster_Line3));
     }
 
+    public void StopSpawn()
+    {
+        StopAllCoroutines();
+        spawnCors[0] = null;
+        spawnCors[1] = null;
+        spawnCors[2] = null;
+    }
+
     public void DecreaseMonsterCnt()
     {
         currentAliveMonsterCnt -= 1;
+        if (currentAliveMonsterCnt < 0)
+            currentAliveMonsterCnt = 0;
+
+        UpdatekillLog();
 
         if (currentAliveMonsterCnt > respawnMonsterCnt)
             return;

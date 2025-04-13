@@ -1,5 +1,7 @@
 using UnityEngine;
 using UtilEnums;
+using MonsterEnums;
+using System.Collections;
 
 public abstract class BaseMonster : BaseEntity
 {
@@ -7,14 +9,18 @@ public abstract class BaseMonster : BaseEntity
     #region Variables
     //[Header("Common Value")]
     protected int monsterLayer;
+    protected const string animState = "State";
     //[SerializeField] protected MonsterIDEnums monsterID = MonsterIDEnums.Zombie;
 
     //[Header("Common Component")]
     /*[SerializeField] */protected Animator anim;
     /*[SerializeField] */protected Rigidbody2D rigid; 
     /*[SerializeField] */protected CapsuleCollider2D coll;
-    /*[SerializeField] */protected MonsterStatController statController; 
+    /*[SerializeField] */protected MonsterStatController statController;
 
+    [Header("Attack")]
+    [SerializeField] protected float attackCoolDownTime = 0.5f;
+    protected bool isCoolDownAttack = false;
     #endregion
 
     // Functions : Common Function(Setting, Pooling, Death)
@@ -37,6 +43,9 @@ public abstract class BaseMonster : BaseEntity
     /// <param name="_position"></param>
     public virtual void Pooling(LayerEnums _layerEnums)
     {
+        if (this.gameObject.activeSelf == false)
+            this.gameObject.SetActive(true);
+
         SetLayer( _layerEnums);
         SetMonsterData();
     }
@@ -57,6 +66,29 @@ public abstract class BaseMonster : BaseEntity
     {
         this.gameObject.SetActive(false);
         MonsterMgr.Instance.DecreaseMonsterCnt();
+    }
+
+    public virtual void SetAnim(MonsterAnimState _animState)
+    {
+        anim.SetInteger(animState, (int)_animState);
+    }
+
+    protected void CoolDownAttack()
+    {
+        isCoolDownAttack = true;
+        StartCoroutine(CCoolDownAttack());
+    }
+
+    protected IEnumerator CCoolDownAttack()
+    {
+        float time = 0;
+        while(time < attackCoolDownTime)
+        {
+            time += Time.deltaTime;
+            yield return null;  
+        }
+        SetAnim(MonsterAnimState.Run);
+        isCoolDownAttack = false;
     }
     #endregion
 }

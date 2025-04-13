@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TowerGunAI : MonoBehaviour
+public class TowerGunAI : BaseAI
 {
     [SerializeField] protected SOProjectileData soProjectileData;
     [SerializeField] protected Transform shootTransform;
@@ -10,6 +10,7 @@ public class TowerGunAI : MonoBehaviour
     public float fireTermTime = 3f;
     private float fireTimer = 0f;
     float minDist = Mathf.Infinity;
+    Quaternion initRotation = Quaternion.Euler(new Vector3(0,0,0));
 
     void FixedUpdate()
     {
@@ -68,5 +69,10 @@ public class TowerGunAI : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(0, 0, bulletAngle);
         /*Transform bulletTransform = */GlobalMgr.PoolMgr.GetPool(UtilEnums.PoolEnums.Bullet, UtilEnums.PoolParentEnums.Bullet, shootTransform.position, rotation).
             GetComponent<Projectile>().SetData(soProjectileData.GetProjectileData(), UtilEnums.TagEnums.Enemy, direction);
+    }
+
+    public override void ResetData()
+    {
+        gunTransform.rotation = initRotation;
     }
 }

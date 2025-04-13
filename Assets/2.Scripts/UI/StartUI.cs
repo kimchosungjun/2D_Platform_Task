@@ -6,13 +6,12 @@ public class StartUI : ManageButtonUI
 {
     public override void PressUI()
     {
-        // To Do ~~ Game System
+        GameSystem.Instance.StartGame();
         uiObject.SetActive(false);
     }
 
     public override void ActiveUI()
     {
-        // To Do ~~ Game System
         uiObject.SetActive(true);
     }
 }

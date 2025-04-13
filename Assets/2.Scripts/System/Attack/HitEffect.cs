@@ -18,6 +18,15 @@ public class HitEffect : MonoBehaviour
     Vector3[] scaleEffects;
     Color color = Color.white;
 
+    void OnEnable()
+    {
+        if (currentMat == null) return;
+
+        isHitEffect = false;
+        currentMat.SetFloat("_FlashAmount", 0);
+        scaleTransform.localScale = new Vector3(1, 1, 1);
+    }
+
     public void Init(SpriteRenderer[] _sprites, bool _isScaleEffect = true)
     {
         if(_sprites==null)

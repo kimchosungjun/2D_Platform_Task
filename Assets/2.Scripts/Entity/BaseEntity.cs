@@ -12,5 +12,6 @@ public abstract class BaseEntity : MonoBehaviour
         if (hitEffect==null) hitEffect = GetComponent<HitEffect>();
         hitEffect.Init(sprites);
     }
+
     public virtual void Setup() { }
 }

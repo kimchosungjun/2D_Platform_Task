@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UtilEnums;
 
@@ -43,9 +42,11 @@ public class Zombie : BaseMonster
     [Header("Knock Back")]
     [SerializeField] float knockBackForce = 2.5f;
     [SerializeField] float knockBackTime = 1f;
+    [SerializeField] float detectFrontRange = 0.2f;
     float moveSpeed = 0;
     float jumpForce = 0;
     Vector2 jumpDirection;
+    MonsterData monsterData = null;
     #endregion
 
     #region Unity Life Cycle : Awake, Starat (Setting)
@@ -64,8 +65,9 @@ public class Zombie : BaseMonster
     void Start()
     {
         Setup();
-        moveSpeed = statController.GetMonsterData().monsterSpeed;
-        jumpForce = statController.GetMonsterData().monsterJumpForce;
+        monsterData = statController.GetMonsterData();
+        moveSpeed = monsterData.monsterSpeed;
+        jumpForce = monsterData.monsterJumpForce;
         heroLayer = 1 << (int)LayerEnums.Hero | 1 << (int)LayerEnums.HeroBox;
     }
 
@@ -75,19 +77,28 @@ public class Zombie : BaseMonster
         groundLayer = monsterLayer;
     }
 
+    protected override void SetMonsterData() 
+    {
+       base.SetMonsterData();
+        monsterData = statController.GetMonsterData(); 
+    }
+
     #endregion
 
     # region Unity Life Cycle : FixedUpdate (Operate AI)
 
     void FixedUpdate()
     {
+        // Detect
         DetectAbove();
-
-        if (isAbove || isKnockBack) return;
-
-        DetectGround();
         DetectFront();
+        DetectGround();
         DetectBack();
+        // Attack
+        DoAttack();
+        // Break Point
+        if (isAbove || isKnockBack) return;
+        // Movement
         Jump();
         HorizontalMove();
         LimitSpeed();
@@ -127,7 +138,7 @@ public class Zombie : BaseMonster
 
     void DetectFront()
     {
-        heroHit = Physics2D.Raycast(detectTransfroms[0].position, Vector2.left, 0.2f, heroLayer);
+        heroHit = Physics2D.Raycast(detectTransfroms[0].position, Vector2.left, detectFrontRange, heroLayer);
         if (heroHit.collider != null)
             isFrontHero = true;
         else
@@ -170,6 +181,19 @@ public class Zombie : BaseMonster
         rigid.velocity = new Vector2(xSpeed, ySpeed);
     }
     #endregion
-    
+
+    #region Attack
+    public void DoAttack()
+    {
+        if (isFrontHero && isCoolDownAttack == false)
+        {
+            CoolDownAttack();
+            heroHit.collider.GetComponent<StatController>().Hit(monsterData.monsterAtk);
+            SetAnim(MonsterEnums.MonsterAnimState.Attack);
+        }
+    }
+
+    #endregion
+
     #endregion
 }

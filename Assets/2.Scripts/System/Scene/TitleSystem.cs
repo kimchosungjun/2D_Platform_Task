@@ -4,26 +4,26 @@ using UnityEngine;
 
 public class TitleSystem : OperateByScene
 {
-    LinkMgr linkMgr = null;
+    [SerializeField] TitleFadeTextUI titleFadeTextUI;
     void Awake()
     {
-     
+        Init();
     }
 
     public override void Init()
     {
-        if (linkMgr == null)
-            linkMgr = new LinkMgr();
-        linkMgr?.Init();
+        GlobalMgr.ResourceMgr = new ResourceMgr();
+        GlobalMgr.SceneMgr= new SceneMgr();
+        GlobalMgr.UIMgr = new UIMgr();
     }
 
     void Start()
     {
-        
+        Setup();
     }
 
     public override void Setup()
     {
-        linkMgr?.Setup();
+        titleFadeTextUI.ShowFade();
     }
 }

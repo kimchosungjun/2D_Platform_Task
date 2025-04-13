@@ -47,5 +47,10 @@ public class Projectile : MonoBehaviour
             this.gameObject.SetActive(false);
             collision.GetComponent<StatController>().Hit(data.damage);
         }
+
+        if (collision.CompareTag("Ground"))
+        {
+            this.gameObject.SetActive(false);
+        }
     }
 }

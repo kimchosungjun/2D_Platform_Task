@@ -16,7 +16,7 @@ public class EnemyKillUI : MonoBehaviour
 
     public void EndGame()
     {
-        enemyKillCnt.text= string.Empty;
+        enemyKillCnt.text= "0";
         killObject.SetActive(false);
     }
 

@@ -613,6 +613,7 @@ MonoBehaviour:
   - {fileID: 6975403778767628713}
   - {fileID: 1556507462227770656}
   - {fileID: 5808931014307383597}
+  attackCoolDownTime: 0.5
   detectTransfroms:
   - {fileID: 3278833073656428082}
   - {fileID: 7043141286792737326}
@@ -622,6 +623,7 @@ MonoBehaviour:
   limitYSpeed: 3
   knockBackForce: 2.5
   knockBackTime: 0.5
+  detectFrontRange: 0.2
 --- !u!1 &6472828620527125161
 GameObject:
   m_ObjectHideFlags: 0
@@ -1048,6 +1050,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4799523012223434088}
     m_Modifications:
+    - target: {fileID: 1744276028551052391, guid: 02c01d10dadee004785084ea78406359, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6277163640969364361, guid: 02c01d10dadee004785084ea78406359, type: 3}
+      propertyPath: showTime
+      value: 2.5
+      objectReference: {fileID: 0}
     - target: {fileID: 6434212061111320447, guid: 02c01d10dadee004785084ea78406359, type: 3}
       propertyPath: m_Name
       value: HPIndicator

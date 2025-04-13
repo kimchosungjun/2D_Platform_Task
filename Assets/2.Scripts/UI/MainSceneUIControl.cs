@@ -27,4 +27,24 @@ public class MainSceneUIControl : MonoBehaviour
         if(killUI == null) killUI = GetComponentInChildren<EnemyKillUI>();
         if(fadeUI == null) fadeUI = GetComponentInChildren<FadeUI>();
     }
+
+    private void Start()
+    {
+        GlobalMgr.UIMgr.MainSceneUIControl = this;
+    }
+
+    public void ReadyGame()
+    {
+        startUI.ActiveUI();
+    }
+
+    public void StartGame()
+    {
+        killUI.StartGame();
+    }
+
+    public void EndGame()
+    {
+        killUI.EndGame();
+    }
 }

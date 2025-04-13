@@ -25,6 +25,7 @@ namespace UtilEnums
     {
         Hero,
         Enemy,
+        Ground
     }
 
     public enum LayerEnums
@@ -64,5 +65,21 @@ namespace MonsterEnums
     public enum MonsterIDEnums
     {
         Zombie = 0,
+    }
+
+    public enum MonsterAnimState
+    {
+        Run=0,
+        Attack=1,
+        Death=2,
+    }
+}
+
+namespace HeroEnums
+{
+    public enum HeroTypeEnums
+    {
+        Hero=0,
+        HeroBox =1,
     }
 }

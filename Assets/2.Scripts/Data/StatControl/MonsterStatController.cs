@@ -33,7 +33,7 @@ public class MonsterStatController : StatController
         monsterData.monsterHP -= damage;
         hpIndicator.DecreaseHP(damage);
         if (monsterData.monsterHP <= 0)
-            hitEffect?.DoHitEffect(monster.Death);
+            monster.Death();
         else
             hitEffect?.DoHitEffect();
     }

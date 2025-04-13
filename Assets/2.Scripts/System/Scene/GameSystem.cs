@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class GameSystem : OperateByScene
 {
+    public static GameSystem Instance = null;
+
+    [SerializeField] TruckController truckController;
     [SerializeField] FadeUI fadeUI;
     void Awake()
     {
@@ -11,10 +14,20 @@ public class GameSystem : OperateByScene
     }
     public override void Init()
     {
-        GlobalMgr.ResourceMgr = new ResourceMgr();
+        if(GlobalMgr.ResourceMgr == null)
+            GlobalMgr.ResourceMgr = new ResourceMgr();
+        if (GlobalMgr.UIMgr == null)
+            GlobalMgr.UIMgr = new UIMgr();
 
-        //if (fadeUI == null)
-        //    fadeUI = FindObjectOfType<FadeUI>();
+        if(truckController==null)
+            truckController = FindObjectOfType<TruckController>();
+        if (fadeUI == null)
+            fadeUI = FindObjectOfType<FadeUI>();
+
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(this.gameObject);
     }
 
     void Start()
@@ -24,7 +37,25 @@ public class GameSystem : OperateByScene
 
     public override void Setup()
     {
-        //fadeUI.Fade(true, () => { fadeUI.gameObject.SetActive(false); });
+        fadeUI.Fade(true, () => { fadeUI.gameObject.SetActive(false); });   
+    }
+
+    public void StartGame()
+    {
+        GlobalMgr.UIMgr.MainSceneUIControl.StartGame();
         MonsterMgr.Instance.StartSpawn();
+    }
+
+    public void DefeatGame()
+    {
+        MonsterMgr.Instance.StopSpawn();
+        GlobalMgr.MonsterMgr.ClearKillLog();
+        GlobalMgr.UIMgr.MainSceneUIControl.EndGame();
+    }
+
+    public void ReadyGame()
+    {
+        GlobalMgr.UIMgr.MainSceneUIControl.ReadyGame();
+        truckController.ResetHeros();
     }
 }
